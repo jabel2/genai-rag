@@ -1,0 +1,36 @@
+version: '3'
+services:
+  python:
+    build: .
+    networks:
+      - mynetwork
+    volumes:
+      - .:/app
+    working_dir: /app
+    ports:
+      - "8501:8501"
+    command: tail -f /dev/null
+
+  neo4j:
+    image: neo4j:latest
+    networks:
+      - mynetwork
+    ports:
+      - "7474:7474"
+      - "7687:7687"
+    volumes:
+      - ./data:/data
+
+  llama-cpp-python:
+    image: ghcr.io/abetlen/llama-cpp-python:latest
+    networks:
+      - mynetwork
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./models:/models
+    environment:
+      - MODEL=/models/llama-2-13b-chat.Q6_K.gguf
+
+networks:
+  mynetwork

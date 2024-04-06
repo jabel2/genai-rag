@@ -1,0 +1,2 @@
+model = llama_cpp.Llama(model_path="/models/llama-2-13b-chat.Q6_K.gguf",chat_format="llama-2")
+print(model.create_chat_completion(messages=[{"role": "user","content": "what is the meaning of life?"}]))
