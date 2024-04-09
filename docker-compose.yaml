@@ -1,15 +1,19 @@
-version: '3'
+version: '3.8'
 services:
   python:
     build: .
     networks:
       - mynetwork
-    volumes:
-      - .:/app
-    working_dir: /app
-    ports:
-      - "8501:8501"
     command: tail -f /dev/null
+    volumes:
+      - ./app:/app
+    deploy:
+        resources:
+          reservations:
+            devices:
+              - driver: nvidia
+                device_ids: ['0']
+                capabilities: [gpu]
 
   neo4j:
     image: neo4j:latest
@@ -37,17 +41,6 @@ services:
       - NEO4J_apoc_import_file_enabled=true
       - NEO4J_apoc_import_file_use__neo4j__config=true
       - NEO4J_DEBUG=yes
-
-  llama-cpp-python:
-    image: ghcr.io/abetlen/llama-cpp-python:latest
-    networks:
-      - mynetwork
-    ports:
-      - "8000:8000"
-    volumes:
-      - ./models:/models
-    environment:
-      - MODEL=/models/llama-2-13b-chat.Q6_K.gguf
 
 networks:
   mynetwork:
