@@ -1,7 +1,6 @@
 from langchain_community.llms import LlamaCpp
 from langchain_core.callbacks import CallbackManager, StreamingStdOutCallbackHandler
 from langchain_core.prompts import PromptTemplate
-import os
 
 template = """Question: {question}
 
@@ -17,7 +16,7 @@ n_batch = 512  # Should be between 1 and n_ctx, consider the amount of VRAM in y
 
 # Make sure the model path is correct for your system!
 llm = LlamaCpp(
-    model_path=os.environ['MODEL'],
+    model_path="/models/mistral-7b-openorca.gguf2.Q4_0.gguf",
     n_gpu_layers=n_gpu_layers,
     n_batch=n_batch,
     callback_manager=callback_manager,

@@ -1,12 +1,35 @@
-version: '3.8'
 services:
   python:
-    build: .
+    build: 
+      context: .
+      dockerfile: python-dockerfile
     networks:
       - mynetwork
-    command: tail -f /dev/null
     volumes:
       - ./app:/app
+    ports:
+    - "8501:8501"
+    working_dir: /app
+    deploy:
+        resources:
+          reservations:
+            devices:
+              - driver: nvidia
+                device_ids: ['0']
+                capabilities: [gpu]
+
+  openllm:
+    build: 
+      context: .
+      dockerfile: openllm-dockerfile
+    networks:
+      - mynetwork
+    volumes:
+      - ./openllm:/openllm
+      - ./models:/models
+    ports:
+    - "3000:3000"
+    working_dir: /openllm
     deploy:
         resources:
           reservations:
